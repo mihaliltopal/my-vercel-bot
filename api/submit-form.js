@@ -4,9 +4,12 @@ module.exports = async (req, res) => {
   if (req.method === 'POST') {
     const { name, email } = req.body;
     const message = `New form submission:\nName: ${name}\nEmail: ${email}`;
-    
+
     const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    console.log('Telegram Token:', telegramToken);
+    console.log('Chat ID:', chatId);
 
     const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
 
@@ -21,6 +24,9 @@ module.exports = async (req, res) => {
           text: message,
         }),
       });
+
+      const responseBody = await telegramResponse.json();
+      console.log('Telegram Response:', responseBody);
 
       if (!telegramResponse.ok) {
         throw new Error(`Telegram API responded with status ${telegramResponse.status}`);
